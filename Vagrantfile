@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Define Vagrant Configuration v2 (http://docs.vagrantup.com/v2/vagrantfile/version.html)
+VAGRANTFILE_API_VERSION = "2"
+
 Vagrant::Config.run do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -36,7 +39,13 @@ Vagrant::Config.run do |config|
   # folder, and the third is the path on the host to the actual folder.
   # config.vm.share_folder "v-data", "/vagrant_data", "../data"
 
-  config.vm.share_folder "www", "/www", "data/www", :create => true, :owner => 'www-data', :group => 'www-data'
+  # Pre vagrant 1.1.0
+  #config.vm.share_folder "www", "/www", "data/www", :create => true, :owner => 'www-data', :group => 'www-data'
+  # Newer vagrant versions can use the generic synced_folder declartion
+  Vagrant.configure("2") do |config|
+    config.vm.synced_folder "data/www", "/www", owner: "www-data", group: "www-data"
+  end
+  
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
